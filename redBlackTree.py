@@ -26,6 +26,12 @@ def isRed(n):
     return color(n) == RED
 
 
+def search(self, val, x = None):
+    if None == x:
+        x 
+
+
+
 def rotateLeft(h):
     x = h.right
     h.right = x.left
@@ -67,6 +73,19 @@ def insert(n, v):
         n = flipColor(n)
     return n
 
+def lookup(node, val, parent = None):
+    if val < node.val:
+        if node.left is None:
+            return None, None
+        return lookup(node.left, val, node)
+    elif val > node.val:
+        if node.right is None:
+            return None, None 
+        return lookup(node.right, val, node)
+    else:
+        #Not greater than or less than -- you found it!
+        return node, parent
+
 
 def height(n):
     if not n:
@@ -92,8 +111,8 @@ def test():
     tree = None
     for i in c:
         tree = insert(tree, i)
-    print 2 * math.log(len(c)) / math.log(2), height(tree)
-#    printNode(tree, 0)
-
+    insert(tree, 201)
+    node, parent = lookup(tree, 201)
+    print node.val
 if __name__ == "__main__":
     test()
