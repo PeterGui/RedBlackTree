@@ -1,110 +1,92 @@
-import math
-
-BLACK = 0
-RED = 1
+black = 0
+red = 1
 
 class RBTreeNode:
-    def __init__(self, val):
-        self.val = val
+
+    def __init__(self, value):
+        self.value = value
         self.left = None
         self.right = None
-        self.color = RED
+        self.color = red
 
+def setColor(node, color):
+    node.color = color
+    return node
 
-def setColor(n, c):
-    n.color = c
-    return n
+def color(node):
+    if not node:
+        return black
+    return node.color
 
+def isRed(node):
+    return color(node) == red
 
-def color(n):
-    if not n:
-        return BLACK
-    return n.color
+def rotateLeft(head):
+    node = head.right
+    head.right = node.left
+    node.left = head
+    node.color = head.color
+    head.color = red
+    return node
 
+def rotateRight(head):
+    node = head.left
+    head.left = node.right
+    node.right = head
+    node.color = head.color
+    head.color = red
+    return node
 
-def isRed(n):
-    return color(n) == RED
+def flipColor(node):
+    node.left.color = black
+    node.right.color = black
+    node.color = red
+    return node
 
-
-def search(self, val, x = None):
-    if None == x:
-        x 
-
-
-
-def rotateLeft(h):
-    x = h.right
-    h.right = x.left
-    x.left = h
-    x.color = h.color
-    h.color = RED
-    return x
-
-
-def rotateRight(h):
-    x = h.left
-    h.left = x.right
-    x.right = h
-    x.color = h.color
-    h.color = RED
-    return x
-
-
-def flipColor(n):
-    n.left.color = BLACK
-    n.right.color = BLACK
-    n.color = RED
-    return n
-
-
-def insert(n, v):
-    if not n:
-        return RBTreeNode(v)
-    if v >= n.val:
-        n.right = insert(n.right, v)
+def insert(node, value):
+    if not node:
+        return RBTreeNode(value)
+    if value >= node.value:
+        node.right = insert(node.right, value)
     else:
-        n.left = insert(n.left, v)
+        node.left = insert(node.left, value)
 
-    if isRed(n.right) and not isRed(n.left):
-        n = rotateLeft(n)
-    if isRed(n.left) and isRed(n.left.left):
-        n = rotateRight(n)
-    if isRed(n.left) and isRed(n.right):
-        n = flipColor(n)
-    return n
+    if isRed(node.right) and not isRed(node.left):
+        node = rotateLeft(node)
+    if isRed(node.left) and isRed(node.left.left):
+        node = rotateRight(node)
+    if isRed(node.left) and isRed(node.right):
+        node = flipColor(node)
+    return node
 
-def lookup(node, val, parent = None):
-    if val < node.val:
+def lookup(node, value, parent = None):
+    if value < node.value:
         if node.left is None:
             return None, None
-        return lookup(node.left, val, node)
-    elif val > node.val:
+        return lookup(node.left, value, node)
+    elif value > node.value:
         if node.right is None:
-            return None, None 
-        return lookup(node.right, val, node)
+            return None, None
+        return lookup(node.right, value, node)
     else:
         #Not greater than or less than -- you found it!
         return node, parent
 
-
-def height(n):
-    if not n:
+def height(node):
+    if not node:
         return 0
+    left_height = height(node.left)
+    right_height = height(node.right)
+    return 1 + max(left_height, right_height)
 
-    h1 = height(n.left)
-    h2 = height(n.right)
-    return 1 + max(h1, h2)
-
-
-def printNode(n, indent):
-    if not n:
+def printNode(node, indent):
+    if not node:
         return
     print " " * indent,
-    (v, c) = n.val
-    print v, "(BLACK)" if c == 0 else "(RED)"
-    printNode(n.left, indent + 4)
-    printNode(n.right, indent + 4)
-
+    (v, c) = node.value
+    print v, "(black)" if c == 0 else "(red)"
+    printNode(node.left, indent + 4)
+    printNode(node.right, indent + 4)
 
 def test():
     c = xrange(0, 32768)
@@ -113,6 +95,5 @@ def test():
         tree = insert(tree, i)
     insert(tree, 201)
     node, parent = lookup(tree, 201)
-    print node.val
-if __name__ == "__main__":
+    print node.value
     test()
